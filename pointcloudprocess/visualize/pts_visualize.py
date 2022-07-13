@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from pyntcloud import PyntCloud
-from utils import paint_points, cal_corner_after_rotation, eight_points, create_lines
+from .utils import paint_points, cal_corner_after_rotation, eight_points, create_lines
 
 COLOR_LIST = {'red': [255, 0, 0], 'green': [0, 255, 0], 'blue': [0, 0, 255],
          'black':[0, 0, 0], 'white': [255, 255, 255], 'aque':[0, 255, 255],
