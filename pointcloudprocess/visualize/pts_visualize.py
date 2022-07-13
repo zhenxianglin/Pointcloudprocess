@@ -12,7 +12,6 @@ COLOR_LIST = {'red': [255, 0, 0], 'green': [0, 255, 0], 'blue': [0, 0, 255],
 class PointCloudScene:
     def __init__(self, points):
         self.points = points
-        self.dim = None
         self.scene = None
         self.boxes = []
  
@@ -35,7 +34,7 @@ class PointCloudScene:
         """
         boxes: List[List] [cx, cy, cz, depth, width, height, rotation]
         """
-        pc_cornors = []
+        pc_corners = []
         for bbox in boxes:
             center = bbox[:3]
             size = bbox[3:6]
@@ -44,18 +43,36 @@ class PointCloudScene:
             except:
                 rotation = 0
             eight_corners = eight_points(center, size, rotation)
-            pc_cornors.append(eight_corners)
-        for corners in pc_cornors:
+            pc_corners.append(eight_corners)
+        for corners in pc_corners:
             if not isinstance(corners, list):
                 corners = corners.tolist()
-            self.boxes.extend(create_lines(cornors=corners, color=color))
-
+            self.boxes.extend(create_lines(corners=corners, color=color))
     
     def add_boxes_by_corners(self, boxes, color='yellow'):
         for corners in boxes:
             if not isinstance(corners, list):
                 corners = corners.tolist()
-            self.boxes.extend(create_lines(cornors=corners, color=color))
+            self.boxes.extend(create_lines(corners=corners, color=color))
+    
+    def draw_line(self, pointA, pointB, color='red'):
+        """
+        pointA: list [x, y, z]
+        pointB: list [x, y, z]
+        "color": "0xFFFFFF" or "red". Default: red
+        """
+        if isinstance(pointA, np.ndarray):
+            pointA = pointA.tolist()
+        if isinstance(pointB, np.ndarray):
+            pointB = pointB.tolist()
+        self.boxes.extend([{"color": color, "vertices": [pointA, pointB]}])
+    
+    def draw_axis(self, length=5):
+        self.boxes.extend([
+            {"color": 'red', "vertices": [[0, 0, 0], [length, 0, 0]]},
+            {"color": 'blue', "vertices": [[0, 0, 0], [0, length, 0]]},
+            {"color": 'green', "vertices": [[0, 0, 0], [0, 0, length]]}
+            ])
 
 
 def create_scene(points, color='green', with_rgb=False):
@@ -112,4 +129,16 @@ def show_scene_by_boxes(points, boxes, points_color='green', with_rgb=False, box
     scene.init_scene(points_color, with_rgb)
     scene = append_boxes(scene, boxes, format, box_color)
     scene.plot(initial_point_size)
-        
+
+def draw_line(scene, pointA, pointB, color='red'):
+    """
+        pointA: list [x, y, z]
+        pointB: list [x, y, z]
+        "color": "0xFFFFFF" or "red". Default: red
+    """
+    scene.draw_line(pointA, pointB, color)
+    return scene
+
+def draw_axis(scene, length=5):
+    scene.draw_axis(length)
+    return scene
