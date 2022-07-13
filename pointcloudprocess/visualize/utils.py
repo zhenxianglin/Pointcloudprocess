@@ -53,11 +53,11 @@ def eight_points(center, size, rotation=0):
     eight_corners = np.stack([conern1, conern2, conern3, conern4, conern5, conern6, conern7, conern8], axis=0)
     return eight_corners
 
-def create_lines(cornors, color="yellow"):
+def create_lines(corners, color="yellow"):
     ind = [[0, 1, 2, 3, 0], [4, 5, 6, 7, 4]]
     vertices_list = []
     for i in range(4):
-        vertices_list.append([cornors[ind[0][i]], cornors[ind[0][i + 1]]])
-        vertices_list.append([cornors[ind[1][i]], cornors[ind[1][i + 1]]])
-        vertices_list.append([cornors[ind[0][i]], cornors[ind[1][i]]])
-    return [{"color": color, "vertices": vertices_list[i]} for i in range(len(vertices_list))] 
+        vertices_list.append([corners[ind[0][i]], corners[ind[0][i + 1]]])
+        vertices_list.append([corners[ind[1][i]], corners[ind[1][i + 1]]])
+        vertices_list.append([corners[ind[0][i]], corners[ind[1][i]]])
+    return [{"color": color, "vertices": vertices_list[i]} for i in range(len(vertices_list))]

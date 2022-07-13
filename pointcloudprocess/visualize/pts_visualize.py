@@ -114,22 +114,20 @@ def append_boxes(scene, boxes, format='corners', color='red'):
 def plot(scene, initial_point_size=0.02):
     scene.plot(initial_point_size)
 
-def show_scene(points, color='green', with_rgb=False, initial_point_size=0.02):
+def show_scene(points, color='green', with_rgb=False, with_axis=True, initial_point_size=0.02):
     if not isinstance(points, np.ndarray):
         raise TypeError("points should be np.ndarray")
     if with_rgb:
         assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
-    scene = PointCloudScene(points)
-    scene.init_scene(color, with_rgb)
+    scene = create_scene(points, color, with_rgb, with_axis)
     scene.plot(initial_point_size)
 
-def show_scene_by_boxes(points, boxes, points_color='green', with_rgb=False, box_color='red', format='corners', initial_point_size=0.02):
+def show_scene_by_boxes(points, boxes, points_color='green', with_rgb=False, box_color='red', format='corners', with_axis=False, initial_point_size=0.02):
     if not isinstance(points, np.ndarray):
         raise TypeError("points should be np.ndarray")
     if with_rgb:
         assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
-    scene = PointCloudScene(points)
-    scene.init_scene(points_color, with_rgb)
+    scene = create_scene(points, points_color, with_rgb, with_axis)
     scene = append_boxes(scene, boxes, format, box_color)
     scene.plot(initial_point_size)
 
