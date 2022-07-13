@@ -14,7 +14,7 @@ install_requires=[
 setup(
     name="pointcloudprocess", 
     version=__version__,    # version ID
-    author="Zhenxiang Lin",    
+    author="blastxiaol",    
     author_email="blastxiaol@gmail.com",    
     description="A point cloud process package", 
     long_description=long_description,  
