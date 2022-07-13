@@ -75,12 +75,13 @@ class PointCloudScene:
             ])
 
 
-def create_scene(points, color='green', with_rgb=False):
+def create_scene(points, color='green', with_rgb=False, with_axis=True):
     """
     Args:
         points: np.ndarray [N, 3+C]
         color: points color, default: 'green'
         with_rgb: scene include color. If with_rgb is True, parameter 'color' can be ignored.
+        with_axis: create 3D-axis
     Return: PointCloudScene
     """
     if not isinstance(points, np.ndarray):
@@ -89,6 +90,8 @@ def create_scene(points, color='green', with_rgb=False):
         assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
     scene = PointCloudScene(points)
     scene.init_scene(color, with_rgb)
+    if with_axis:
+        scene.draw_axis()
     return scene
 
 def append_boxes(scene, boxes, format='corners', color='red'):
