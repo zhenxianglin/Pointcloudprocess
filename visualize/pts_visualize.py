@@ -1,6 +1,5 @@
 import pandas as pd
 from pyntcloud import PyntCloud
-import cv2
 from utils import paint_points, cal_corner_after_rotation, eight_points, create_lines
 
 COLOR_LIST = {'red': [255, 0, 0], 'green': [0, 255, 0], 'blue': [0, 0, 255],

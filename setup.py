@@ -2,16 +2,24 @@ from setuptools import setup, find_packages
   
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-  
+
+exec(open("_version.py").read())
+
+install_requires=[
+    'pandas',
+    'pyntcloud>=0.3.0',
+    'pythreejs>=2.3.0',
+    ],
+
 setup(
-    name="pointcloudprocess", # 用自己的名替换其中的YOUR_USERNAME_
-    version="0.0.1",    #包版本号，便于维护版本
-    author="Zhenxiang Lin",    #作者，可以写自己的姓名
-    author_email="blastxiaol@gmail.com",    #作者联系方式，可写自己的邮箱地址
-    description="A small example package",#包的简述
-    long_description=long_description,    #包的详细介绍，一般在README.md文件内
+    name="pointcloudprocess", 
+    version=__version__,    # version ID
+    author="Zhenxiang Lin",    
+    author_email="blastxiaol@gmail.com",    
+    description="A point cloud process package", 
+    long_description=long_description,  
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",    #自己项目地址，比如github的项目地址
+    url="https://github.com/blastxiaol/Pointcloudprocess",   
     packages=find_packages(),
     classifiers=[
         "Development Status :: 1 - Planning",
@@ -19,5 +27,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',    #对python的最低版本要求
+    python_requires='>=3.6', 
+    install_requires=install_requires,
 )
