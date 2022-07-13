@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-exec(open("_version.py").read())
+exec(open("pointcloudprocess/version.py").read())
 
 install_requires=[
     'pandas',

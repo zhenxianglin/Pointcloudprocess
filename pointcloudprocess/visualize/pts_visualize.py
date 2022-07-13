@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pyntcloud import PyntCloud
 from utils import paint_points, cal_corner_after_rotation, eight_points, create_lines
 
@@ -8,15 +9,12 @@ COLOR_LIST = {'red': [255, 0, 0], 'green': [0, 255, 0], 'blue': [0, 0, 255],
          'gray': [125, 125, 125]
 }
 
-class PointCloudPlot:
+class PointCloudScene:
     def __init__(self, points):
         self.points = points
         self.dim = None
         self.scene = None
         self.boxes = []
-    
-    def load_points(self, points):
-        self.points = points
  
     def plot(self, initial_point_size=0.02):
         assert self.scene is not None
@@ -33,7 +31,7 @@ class PointCloudPlot:
         pc_plot = pd.DataFrame(paint_points(pc_plot, color=color), columns=['x', 'y', 'z', 'red', 'green', 'blue'])
         self.scene = PyntCloud(pc_plot)
 
-    def add_bboxes(self, boxes, color='blue'):
+    def add_boxes_by_center(self, boxes, color='blue'):
         """
         boxes: List[List] [cx, cy, cz, depth, width, height, rotation]
         """
@@ -48,14 +46,70 @@ class PointCloudPlot:
             eight_corners = eight_points(center, size, rotation)
             pc_cornors.append(eight_corners)
         for corners in pc_cornors:
-            self.boxes.extend(create_lines(cornors=corners.tolist(), color=color))
+            if not isinstance(corners, list):
+                corners = corners.tolist()
+            self.boxes.extend(create_lines(cornors=corners, color=color))
 
-    def add_one_box(self, box, color='yellow'):
-        self.add_bboxes([box], color)
     
-    def add_one_box_by_corners(self, box, color='yellow'):
-        for corners in box:
-            self.boxes.extend(create_lines(cornors=corners.tolist(), color=color))
-    
-    
+    def add_boxes_by_corners(self, boxes, color='yellow'):
+        for corners in boxes:
+            if not isinstance(corners, list):
+                corners = corners.tolist()
+            self.boxes.extend(create_lines(cornors=corners, color=color))
+
+
+def create_scene(points, color='green', with_rgb=False):
+    """
+    Args:
+        points: np.ndarray [N, 3+C]
+        color: points color, default: 'green'
+        with_rgb: scene include color. If with_rgb is True, parameter 'color' can be ignored.
+    Return: PointCloudScene
+    """
+    if not isinstance(points, np.ndarray):
+        raise TypeError("points should be np.ndarray")
+    if with_rgb:
+        assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
+    scene = PointCloudScene(points)
+    scene.init_scene(color, with_rgb)
+    return scene
+
+def append_boxes(scene, boxes, format='corners', color='red'):
+    """
+    Args:
+        scene: PointCloudScene
+        boxes: List or np.ndarray.
+        format: 'corners' or 'center'. If corners, the format of each box is [8, 3] (eight corners). 
+                If center, the format is [7, ] (cx, cy, cz, l, w, h, yaw). Default: 'corners'
+        color: box color. Default: red
+    """
+    assert format in {'corners', 'center'}, f"format can only be corners or center"
+    assert isinstance(boxes, [list, np.ndarray])
+    if format == 'corners':
+        scene.add_boxes_by_corners(boxes, color)
+    else:
+        scene.add_boxes_by_center(boxes, color)
+    return scene
+
+def plot(scene, initial_point_size=0.02):
+    scene.plot(initial_point_size)
+
+def show_scene(points, color='green', with_rgb=False, initial_point_size=0.02):
+    if not isinstance(points, np.ndarray):
+        raise TypeError("points should be np.ndarray")
+    if with_rgb:
+        assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
+    scene = PointCloudScene(points)
+    scene.init_scene(color, with_rgb)
+    scene.plot(initial_point_size)
+
+def show_scene_by_boxes(points, boxes, points_color='green', with_rgb=False, box_color='red', format='corners', initial_point_size=0.02):
+    if not isinstance(points, np.ndarray):
+        raise TypeError("points should be np.ndarray")
+    if with_rgb:
+        assert points.shape[1] >= 6, f"If RGB points, points dimension should be at least 6 (x, y, z, r, g, b)."
+    scene = PointCloudScene(points)
+    scene.init_scene(points_color, with_rgb)
+    scene = append_boxes(scene, boxes, format, box_color)
+    scene.plot(initial_point_size)
         
