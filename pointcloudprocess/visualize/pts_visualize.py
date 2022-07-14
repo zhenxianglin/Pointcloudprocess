@@ -122,7 +122,7 @@ def show_scene(points, color='green', with_rgb=False, with_axis=True, initial_po
     scene = create_scene(points, color, with_rgb, with_axis)
     scene.plot(initial_point_size)
 
-def show_scene_by_boxes(points, boxes, points_color='green', with_rgb=False, box_color='red', format='corners', with_axis=False, initial_point_size=0.02):
+def show_scene_with_boxes(points, boxes, format='center', points_color='green', with_rgb=False, box_color='red', with_axis=False, initial_point_size=0.02):
     if not isinstance(points, np.ndarray):
         raise TypeError("points should be np.ndarray")
     if with_rgb:
