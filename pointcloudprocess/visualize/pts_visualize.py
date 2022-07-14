@@ -104,7 +104,7 @@ def append_boxes(scene, boxes, format='corners', color='red'):
         color: box color. Default: red
     """
     assert format in {'corners', 'center'}, f"format can only be corners or center"
-    assert isinstance(boxes, [list, np.ndarray])
+    assert isinstance(boxes, (list, np.ndarray))
     if format == 'corners':
         scene.add_boxes_by_corners(boxes, color)
     else:
